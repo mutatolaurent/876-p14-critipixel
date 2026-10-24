@@ -17,14 +17,14 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\OneToMany;
-use Gedmo\Mapping\Annotation\Slug;
+//use Gedmo\Mapping\Annotation\Slug;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
-use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
-use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
+use Vich\UploaderBundle\Mapping\Attribute\Uploadable;
+use Vich\UploaderBundle\Mapping\Attribute\UploadableField;
 
 #[Entity]
 #[UniqueEntity('slug')]
@@ -51,7 +51,7 @@ class VideoGame
     private ?File $imageFile = null;
 
     #[Column(unique: true)]
-    #[Slug(fields: ['title'])]
+    //#[Slug(fields: ['title'])]
     private string $slug;
 
     #[NotBlank]
@@ -117,6 +117,12 @@ class VideoGame
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function setSlug(string $slug): VideoGame
+    {
+        $this->slug = $slug;
+        return $this;
     }
 
     public function setImageFile(?File $imageFile = null): void

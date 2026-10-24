@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
-use Gedmo\Mapping\Annotation\Slug;
+// use Gedmo\Mapping\Annotation\Slug;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -23,7 +23,7 @@ class Tag
     private ?int $id = null;
 
     #[Column(unique: true)]
-    #[Slug(fields: ['name'])]
+    //#[Slug(fields: ['name'])]
     private string $code;
 
     #[NotBlank]
@@ -39,6 +39,12 @@ class Tag
     public function getCode(): string
     {
         return $this->code;
+    }
+
+    public function setCode(string $code): Tag
+    {
+        $this->code = $code;
+        return $this;
     }
 
     public function getName(): string
