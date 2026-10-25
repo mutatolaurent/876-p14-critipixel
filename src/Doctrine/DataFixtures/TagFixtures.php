@@ -7,8 +7,18 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Class TagFixtures
+ *
+ * @package App\Doctrine\DataFixtures
+ */
 final class TagFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * Load data fixtures with the passed EntityManager
+     *
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager): void
     {
         $tagData = [
