@@ -34,8 +34,8 @@ final class ReviewFixtures extends Fixture implements DependentFixtureInterface
             // Choisir un nombre aléatoire d'utilisateurs pour noter ce jeu (entre 3 et 10)
             $numberOfReviewers = $this->faker->numberBetween(3, min(10, count($users)));
             $shuffledUsers = $users;
-            shuffle($shuffledUsers);
-            $reviewers = array_slice($shuffledUsers, 0, $numberOfReviewers);
+            shuffle($shuffledUsers); // Mélanger les utilisateurs pour choisir aléatoirement
+            $reviewers = array_slice($shuffledUsers, 0, $numberOfReviewers); // Sélectionner les premiers utilisateurs après le mélange
 
             foreach ($reviewers as $user) {
                 $review = new Review();

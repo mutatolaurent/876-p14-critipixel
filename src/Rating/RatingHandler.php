@@ -16,6 +16,7 @@ final readonly class RatingHandler implements CalculateAverageRating, CountRatin
             return;
         }
 
+        // Calculer la somme des notes et la moyenne
         $ratingsSum = array_sum(
             array_map(
                 static fn (Review $review): int => $review->getRating(),
@@ -23,7 +24,7 @@ final readonly class RatingHandler implements CalculateAverageRating, CountRatin
             )
         );
 
-        $videoGame->setAverageRating((int) ceil($ratingsSum/ count($videoGame->getReviews())));
+        $videoGame->setAverageRating((int) ceil($ratingsSum / count($videoGame->getReviews())));
     }
 
     public function countRatingsPerValue(VideoGame $videoGame): void
