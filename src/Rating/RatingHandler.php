@@ -16,11 +16,11 @@ final readonly class RatingHandler implements CalculateAverageRating, CountRatin
             return;
         }
 
-        // Calculer la somme des notes et la moyenne
+        // Calculer la somme des notes et la moyenne à partir de la collection de critiques
         $ratingsSum = array_sum(
             array_map(
                 static fn (Review $review): int => $review->getRating(),
-                $videoGame->getReviews()->toArray()
+                $videoGame->getReviews()->toArray() // Tableau d'objets Review qui sera parcouru par array_map pour extraire les notes
             )
         );
 
