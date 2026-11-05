@@ -22,7 +22,7 @@ final class VideoGameController extends AbstractController
 {
     #[Route(name: 'list', methods: [Request::METHOD_GET])]
     public function list(
-        #[ValueResolver('pagination')]
+        #[ValueResolver('pagination')] // Instancie automatiqument un objet pagination à partir des paramètres de la requête 
         Pagination $pagination,
         Request $request,
         ListFactory $listFactory,
