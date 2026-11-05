@@ -12,6 +12,9 @@ final class RegisterTest extends FunctionalTestCase
 {
     public function testThatRegistrationShouldSucceeded(): void
     {
+        // Nettoie un éventuel utilisateur créé lors d'un run précédent
+        $this->removeTestUser();
+
         $this->get('/auth/register');
 
         $this->client->submitForm('S\'inscrire', self::getFormData());
@@ -57,5 +60,19 @@ final class RegisterTest extends FunctionalTestCase
             'register[email]' => 'user@email.com',
             'register[plainPassword]' => 'SuperPassword123!'
         ] + $overrideData;
+    }
+
+    // Méthode pour supprimer le User de test après l'exécution du test
+    private function removeTestUser(): void
+    {
+        $entityManager = $this->getEntityManager();
+        $user = $entityManager->getRepository(User::class)->findOneBy([
+            'email' => 'user@email.com',
+        ]);
+
+        if ($user !== null) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
     }
 }

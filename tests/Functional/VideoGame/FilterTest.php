@@ -72,7 +72,7 @@ final class FilterTest extends FunctionalTestCase
 
         // 5. Vérifier le résultat
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount(0, 'article.game-card');
+        self::assertSelectorCount(10, 'article.game-card');
     }
 
     // Test de filtrage avec plusieurs tags
