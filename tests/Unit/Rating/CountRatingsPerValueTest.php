@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Tests\Rating;
 
 use App\Model\Entity\Review;
@@ -13,18 +11,18 @@ use PHPUnit\Framework\TestCase;
 class CountRatingsPerValueTest extends TestCase
 {
     /**
-     * @param int[] $ratings
+     * @param int[]           $ratings
      * @param array<int, int> $expectedCounts
      */
     #[DataProvider('provideRatingsForCountingData')]
     public function testCountRatingsPerValueWithReviews(array $ratings, array $expectedCounts): void
     {
-        // 1. Arrange : Création du VideoGame et ajout des avis factices (mocks)
+        // 1. Arrange : Création du VideoGame et ajout de vraies instances de Review
         $videoGame = new VideoGame();
 
         foreach ($ratings as $ratingValue) {
-            $review = $this->createMock(Review::class);
-            $review->method('getRating')->willReturn($ratingValue);
+            $review = new Review();
+            $review->setRating($ratingValue);
             $videoGame->getReviews()->add($review);
         }
 
@@ -44,7 +42,7 @@ class CountRatingsPerValueTest extends TestCase
     }
 
     /**
-     * Fournit différents scénarios de notes et les résultats de comptage attendus [1 => nb, 2 => nb, ...]
+     * Fournit différents scénarios de notes et les résultats de comptage attendus [1 => nb, 2 => nb, ...].
      *
      * @return array<string, array{ratings: int[], expectedCounts: array<int, int>}>
      */

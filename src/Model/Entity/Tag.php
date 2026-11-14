@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Model\Entity;
 
 use Doctrine\ORM\Mapping\Column;
@@ -23,7 +21,7 @@ class Tag
     private ?int $id = null;
 
     #[Column(unique: true)]
-    //#[Slug(fields: ['name'])]
+    // #[Slug(fields: ['name'])]
     private string $code;
 
     #[NotBlank]
@@ -41,9 +39,10 @@ class Tag
         return $this->code;
     }
 
-    public function setCode(string $code): Tag
+    public function setCode(string $code): self
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -52,9 +51,10 @@ class Tag
         return $this->name;
     }
 
-    public function setName(string $name): Tag
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 }

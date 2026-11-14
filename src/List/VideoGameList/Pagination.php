@@ -1,23 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\List\VideoGameList;
 
 use App\Model\ValueObject\Direction;
 use App\Model\ValueObject\Info;
 use App\Model\ValueObject\Page;
 use App\Model\ValueObject\Sorting;
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
-use RuntimeException;
-use Traversable;
 
 /**
- * @implements IteratorAggregate<Page>
+ * @implements \IteratorAggregate<Page>
  */
-final class Pagination implements IteratorAggregate, Countable
+final class Pagination implements \IteratorAggregate, \Countable
 {
     private bool $initialized = false;
 
@@ -34,7 +27,7 @@ final class Pagination implements IteratorAggregate, Countable
         private int $page,
         private int $limit,
         private Sorting $sorting,
-        private Direction $direction
+        private Direction $direction,
     ) {
     }
 
@@ -46,7 +39,7 @@ final class Pagination implements IteratorAggregate, Countable
     public function getLastPage(): int
     {
         if (!$this->initialized) {
-            throw new RuntimeException('Pagination is not initialized');
+            throw new \RuntimeException('Pagination is not initialized');
         }
 
         return (int) ceil($this->total / $this->limit);
@@ -67,21 +60,21 @@ final class Pagination implements IteratorAggregate, Countable
     }
 
     /**
-     * @return Traversable<string, int>
+     * @return \Traversable<int, Page>
      */
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         if (!$this->initialized) {
-            throw new RuntimeException('Pagination is not initialized');
+            throw new \RuntimeException('Pagination is not initialized');
         }
 
-        return new ArrayIterator($this->pages);
+        return new \ArrayIterator($this->pages);
     }
 
     public function getInfo(): Info
     {
         if (!$this->initialized) {
-            throw new RuntimeException('Pagination is not initialized');
+            throw new \RuntimeException('Pagination is not initialized');
         }
 
         return new Info(
@@ -102,11 +95,17 @@ final class Pagination implements IteratorAggregate, Countable
         return $this->limit;
     }
 
+    /**
+     * @return array<int, Direction>
+     */
     public function getDirections(): array
     {
         return Direction::cases();
     }
 
+    /**
+     * @return array<int, Sorting>
+     */
     public function getAllSorting(): array
     {
         return Sorting::cases();

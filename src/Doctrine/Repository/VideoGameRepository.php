@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Doctrine\Repository;
 
 use App\List\VideoGameList\Filter;
@@ -36,7 +34,7 @@ final class VideoGameRepository extends ServiceEntityRepository
                 $pagination->getDirection()->getSql()
             );
 
-        if ($filter->getSearch() !== null) {
+        if (null !== $filter->getSearch()) {
             $queryBuilder
                 ->andWhere(
                     $queryBuilder->expr()->orX(
@@ -45,7 +43,7 @@ final class VideoGameRepository extends ServiceEntityRepository
                         $queryBuilder->expr()->like('vg.test', ':search'),
                     )
                 )
-                ->setParameter('search', '%' . $filter->getSearch() . '%');
+                ->setParameter('search', '%'.$filter->getSearch().'%');
         }
 
         if ([] !== $filter->getTags()) {
@@ -61,7 +59,7 @@ final class VideoGameRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere($queryBuilder->expr()->in('vg.id', $subQuery->getDQL()))
                 ->setParameter('tags', $filter->getTags())
-                ->setParameter('tagCount', count($filter->getTags()));
+                ->setParameter('tagCount', \count($filter->getTags()));
         }
 
         return new Paginator($queryBuilder, fetchJoinCollection: true);

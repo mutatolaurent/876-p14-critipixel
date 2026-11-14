@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Tests\Functional;
 
 use App\Model\Entity\User;
@@ -27,7 +25,9 @@ abstract class FunctionalTestCase extends WebTestCase
 
     /**
      * @template T of object
+     *
      * @param class-string<T> $id
+     *
      * @return T
      */
     protected function service(string $id): object
@@ -35,6 +35,14 @@ abstract class FunctionalTestCase extends WebTestCase
         return $this->client->getContainer()->get($id);
     }
 
+    /**
+     * Simplifie l'envoi d'une requête GET et retourne le Crawler pour l'analyse du contenu de la réponse.
+     *
+     * @param string               $uri        L'URI de la requête GET
+     * @param array<string, mixed> $parameters paramètres de la requête GET
+     *
+     * @return Crawler le Crawler pour analyser le contenu de la réponse
+     */
     protected function get(string $uri, array $parameters = []): Crawler
     {
         return $this->client->request('GET', $uri, $parameters);

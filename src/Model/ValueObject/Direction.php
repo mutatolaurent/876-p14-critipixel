@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Model\ValueObject;
 
 use App\Model\Trait\EnumTrait;
@@ -15,7 +13,7 @@ enum Direction: string
 
     public function getSql(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Ascending => 'asc',
             self::Descending => 'desc',
         };

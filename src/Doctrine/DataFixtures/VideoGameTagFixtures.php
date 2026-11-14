@@ -10,21 +10,17 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
 
 /**
- * Class VideoGameTagFixtures
- *
- * @package App\Doctrine\DataFixtures
+ * Class VideoGameTagFixtures.
  */
 final class VideoGameTagFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
-        private readonly Generator $faker
+        private readonly Generator $faker,
     ) {
     }
 
     /**
-     * Load data fixtures with the passed EntityManager
-     *
-     * @param ObjectManager $manager
+     * Load data fixtures with the passed EntityManager.
      */
     public function load(ObjectManager $manager): void
     {
@@ -35,25 +31,23 @@ final class VideoGameTagFixtures extends Fixture implements DependentFixtureInte
         $tags = $manager->getRepository(Tag::class)->findAll();
 
         // Si aucun jeu vidéo ou aucun tag n'est trouvé, on ne fait rien
-        if (empty($videoGames) || empty($tags)) {
+        if (0 === \count($videoGames) || 0 === \count($tags)) {
             return;
         }
 
         // Pour chaque jeu vidéo, on lui attribue un nombre aléatoire de tags (entre 0 et 3)
         foreach ($videoGames as $videoGame) {
-
             // Déterminer un nombre aléatoire de tags entre 0 et 3
             $tagCount = $this->faker->numberBetween(0, 3);
 
             // Si le nombre de tags est supérieur à 0, on sélectionne aléatoirement des tags et on les associe au jeu vidéo
             if ($tagCount > 0) {
-
                 // Mélanger une copie du tableau des tags et en extraire $tagCount éléments
                 $shuffledTags = $tags;
                 shuffle($shuffledTags);
 
                 // Sélectionner les premiers $tagCount tags après le mélange
-                $selectedTags = array_slice($shuffledTags, 0, min($tagCount, count($tags)));
+                $selectedTags = \array_slice($shuffledTags, 0, min($tagCount, \count($tags)));
 
                 // Associer les tags sélectionnés au jeu vidéo
                 foreach ($selectedTags as $tag) {

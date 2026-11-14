@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Model\Entity;
 
 use App\Doctrine\EntityListener\UserListener;
@@ -62,9 +60,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): User
+    public function setUsername(string $username): self
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -73,9 +72,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): User
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -84,9 +84,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): User
+    public function setPassword(string $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -95,9 +96,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(?string $plainPassword): User
+    public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+
         return $this;
     }
 

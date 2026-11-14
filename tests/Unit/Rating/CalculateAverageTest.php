@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Tests\Rating;
 
 use App\Model\Entity\Review;
@@ -14,20 +12,19 @@ class CalculateAverageTest extends TestCase
 {
     /**
      * Teste le calcul de la moyenne des notes pour un jeu vidéo avec avis.
-     * @param int[] $ratings Tableau de notes pour le jeu vidéo
-     * @param int $expectedAverage Moyenne attendue (arrondie avec ceil)
      *
+     * @param int[] $ratings         Tableau de notes pour le jeu vidéo
+     * @param int   $expectedAverage Moyenne attendue (arrondie avec ceil)
      */
     #[DataProvider('provideVideoGameRatingsData')]
     public function testCalculateAverageWithReviews(array $ratings, int $expectedAverage): void
     {
-        // 1. Arrange : Création du jeu de données
+        // 1. Arrange : Création du jeu de données avec de vraies instances de Review
         $videoGame = new VideoGame();
 
         foreach ($ratings as $ratingValue) {
-            // On mock l'entité Review pour simuler différentes notes
-            $review = $this->createMock(Review::class);
-            $review->method('getRating')->willReturn($ratingValue);
+            $review = new Review();
+            $review->setRating($ratingValue);
 
             // On ajoute l'avis à la collection du VideoGame
             $videoGame->getReviews()->add($review);
@@ -43,7 +40,7 @@ class CalculateAverageTest extends TestCase
     }
 
     /**
-     * Fournit 5 cas de test différents (notes -> moyenne attendue avec ceil)
+     * Fournit 5 cas de test différents (notes -> moyenne attendue avec ceil).
      *
      * @return array<string, array{ratings: int[], expectedAverage: int}>
      */
@@ -72,5 +69,4 @@ class CalculateAverageTest extends TestCase
             ],
         ];
     }
-
 }

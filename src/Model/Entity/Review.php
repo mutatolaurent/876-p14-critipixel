@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Model\Entity;
 
 use Doctrine\DBAL\Types\Types;
@@ -46,9 +44,10 @@ class Review
         return $this->videoGame;
     }
 
-    public function setVideoGame(VideoGame $videoGame): Review
+    public function setVideoGame(VideoGame $videoGame): self
     {
         $this->videoGame = $videoGame;
+
         return $this;
     }
 
@@ -57,9 +56,10 @@ class Review
         return $this->user;
     }
 
-    public function setUser(User $user): Review
+    public function setUser(User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -68,9 +68,10 @@ class Review
         return $this->rating;
     }
 
-    public function setRating(int $rating): Review
+    public function setRating(int $rating): self
     {
         $this->rating = $rating;
+
         return $this;
     }
 
@@ -79,9 +80,10 @@ class Review
         return $this->comment;
     }
 
-    public function setComment(?string $comment): Review
+    public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
         return $this;
     }
 }

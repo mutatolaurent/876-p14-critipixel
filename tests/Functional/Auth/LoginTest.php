@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Tests\Functional\Auth;
 
 use App\Tests\Functional\FunctionalTestCase;
@@ -13,9 +11,12 @@ final class LoginTest extends FunctionalTestCase
     {
         $this->get('/auth/login');
 
+        // AJOUT TEMPORAIRE POUR DEBUG : Affiche le code HTML rendu dans la CI
+        // dump($this->client->getResponse()->getContent());
+
         $this->client->submitForm('Se connecter', [
             'email' => 'user+1@email.com',
-            'password' => 'password'
+            'password' => 'password',
         ]);
 
         $authorizationChecker = $this->service(AuthorizationCheckerInterface::class);
@@ -33,7 +34,7 @@ final class LoginTest extends FunctionalTestCase
 
         $this->client->submitForm('Se connecter', [
             'email' => 'user+1@email.com',
-            'password' => 'fail'
+            'password' => 'fail',
         ]);
 
         $authorizationChecker = $this->service(AuthorizationCheckerInterface::class);

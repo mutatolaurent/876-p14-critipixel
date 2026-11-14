@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\List\VideoGameList;
 
 use App\Model\ValueObject\Direction;
@@ -14,11 +12,14 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 #[AsTargetedValueResolver('pagination')]
 final readonly class PaginationValueResolver implements ValueResolverInterface
 {
+    /**
+     * @return iterable<Pagination>
+     */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $argumentType = $argument->getType();
 
-        if ($argumentType !== Pagination::class) {
+        if (Pagination::class !== $argumentType) {
             return [];
         }
 

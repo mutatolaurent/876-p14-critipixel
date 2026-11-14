@@ -1,0 +1,47 @@
+<IfModule mod_headers.c>
+    # 1. HSTS (HTTP Strict Transport Security) - Force le HTTPS pendant 1 an
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # 2. X-Frame-Options - Empêche l'intégration de votre site dans un iframe (protection contre le Clickjacking)
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # 3. X-Content-Type-Options - Empêche le navigateur de deviner (sniffing) le type MIME d'un fichier
+    Header always set X-Content-Type-Options "nosniff"
+
+    # 4. Referrer-Policy - Contrôle les informations de référence transmises lors d'un lien
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # 5. Content-Security-Policy (CSP) - Restreint les sources de chargement des scripts, styles et images
+    # (Attention : adaptez ce domaine si vous utilisez des CDN externes, polices Google, etc.)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # --- MODE MAINTENANCE ---
+    # Si un fichier nommé .maintenance existe dans public/, tout est redirigé vers maintenance.html
+    RewriteCond %{DOCUMENT_ROOT}/.maintenance -f
+    RewriteCond %{REQUEST_URI} !/maintenance.html [NC]
+    RewriteRule ^(.*)$ /maintenance.html [R=503,L]
+
+    # Force Apache à utiliser maintenance.html comme page pour l'erreur 503
+    ErrorDocument 503 /maintenance.html
+
+    # Bloquer l'accès à tous les fichiers et dossiers cachés (commençant par un point)
+    RewriteRule (^|/)\.(?!well-known) - [F]
+
+    # Transférer l'en-tête Authorization à PHP pour les JWT
+    RewriteCond %{HTTP:Authorization} ^(.+)$
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Détermine la réécriture pour les redirections
+    RewriteCond %{REQUEST_URI}::$1 ^(.*?)/(.*)\?.*$
+    RewriteRule ^(.*)$ - [E=BASE:%1]
+
+    # Redirige toutes les requêtes vers index.php si le fichier n'existe pas
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ %{ENV:BASE}/index.php [L]
+
+</IfModule>

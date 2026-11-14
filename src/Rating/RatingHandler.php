@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Rating;
 
 use App\Model\Entity\Review;
@@ -11,8 +9,9 @@ final readonly class RatingHandler implements CalculateAverageRating, CountRatin
 {
     public function calculateAverage(VideoGame $videoGame): void
     {
-        if (count($videoGame->getReviews()) === 0) {
+        if (0 === \count($videoGame->getReviews())) {
             $videoGame->setAverageRating(null);
+
             return;
         }
 
@@ -24,14 +23,14 @@ final readonly class RatingHandler implements CalculateAverageRating, CountRatin
             )
         );
 
-        $videoGame->setAverageRating((int) ceil($ratingsSum / count($videoGame->getReviews())));
+        $videoGame->setAverageRating((int) ceil($ratingsSum / \count($videoGame->getReviews())));
     }
 
     public function countRatingsPerValue(VideoGame $videoGame): void
     {
         $videoGame->getNumberOfRatingsPerValue()->clear();
 
-        if (count($videoGame->getReviews()) === 0) {
+        if (0 === \count($videoGame->getReviews())) {
             return;
         }
 

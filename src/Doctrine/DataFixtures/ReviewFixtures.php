@@ -13,23 +13,19 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
 
 /**
- * Class ReviewFixtures
- *
- * @package App\Doctrine\DataFixtures
+ * Class ReviewFixtures.
  */
 final class ReviewFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
         private readonly Generator $faker,
         private readonly CalculateAverageRating $calculateAverageRating,
-        private readonly CountRatingsPerValue $countRatingsPerValue
+        private readonly CountRatingsPerValue $countRatingsPerValue,
     ) {
     }
 
     /**
-     * Load data fixtures with the passed EntityManager
-     *
-     * @param ObjectManager $manager
+     * Load data fixtures with the passed EntityManager.
      */
     public function load(ObjectManager $manager): void
     {
@@ -40,26 +36,23 @@ final class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $videoGames = $manager->getRepository(VideoGame::class)->findAll();
 
         // Si aucun utilisateur ou aucun jeu vidéo n'est trouvé, on ne fait rien
-        if (empty($users) || empty($videoGames)) {
+        if (0 === \count($users) || 0 === \count($videoGames)) {
             return;
         }
 
-        //
         foreach ($videoGames as $videoGame) {
-
             // Choisir un nombre aléatoire d'utilisateurs pour noter ce jeu (entre 3 et 10)
-            $numberOfReviewers = $this->faker->numberBetween(3, min(10, count($users)));
+            $numberOfReviewers = $this->faker->numberBetween(3, min(10, \count($users)));
 
             // Mélanger les utilisateurs pour choisir aléatoirement
             $shuffledUsers = $users;
             shuffle($shuffledUsers); // Mélanger les utilisateurs pour choisir aléatoirement
 
             // Sélectionner les premiers utilisateurs après le mélange
-            $reviewers = array_slice($shuffledUsers, 0, $numberOfReviewers);
+            $reviewers = \array_slice($shuffledUsers, 0, $numberOfReviewers);
 
             // Pour chaque utilisateur sélectionné, créer un avis pour le jeu vidéo
             foreach ($reviewers as $user) {
-
                 // Créer un nouvel avis
                 $review = new Review();
                 $review->setUser($user)

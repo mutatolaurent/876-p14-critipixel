@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Form;
 
 use App\Model\Entity\User;
@@ -12,6 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<User>
+ */
 final class RegisterType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void
@@ -26,19 +27,19 @@ final class RegisterType extends AbstractType
                 'label' => 'Pseudo',
                 'attr' => [
                     'placeholder' => 'Pseudo',
-                ]
+                ],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
                     'placeholder' => 'Email',
-                ]
+                ],
             ])
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'attr' => [
                     'placeholder' => 'Mot de passe',
-                ]
+                ],
             ]);
     }
 }

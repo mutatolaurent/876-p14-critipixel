@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller;
 
 use App\Form\RegisterType;
@@ -22,7 +20,7 @@ final class AuthController extends AbstractController
         return $this->render('views/auth/login.html.twig', [
             'controller_name' => 'LoginController',
             'last_username' => $authenticationUtils->getLastUsername(),
-            'error'         => $authenticationUtils->getLastAuthenticationError(),
+            'error' => $authenticationUtils->getLastAuthenticationError(),
         ]);
     }
 
@@ -37,6 +35,7 @@ final class AuthController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash('success', 'Inscription réussie. Vous pouvez vous connecter !');
+
             return $this->redirectToRoute('auth_login');
         }
 

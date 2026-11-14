@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Model\ValueObject;
 
 final readonly class Page
@@ -10,7 +8,7 @@ final readonly class Page
         public int $page,
         public bool $active,
         public string $label,
-        public string $url
+        public string $url,
     ) {
     }
 }

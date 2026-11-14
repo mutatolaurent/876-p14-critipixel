@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Tests\Functional\Review;
 
 use App\Model\Entity\Review;
@@ -15,7 +13,7 @@ final class AddReviewTest extends FunctionalTestCase
     private const VIDEO_GAME_H2 = 'Avis des lecteurs';
     private const TEST_USER_EMAIL = 'user+4@email.com';
     private const TEST_COMMENT = 'Mon commentaire de test PHPUnit';
-    
+
     protected function tearDown(): void
     {
         $this->removeTestReview();
@@ -32,7 +30,7 @@ final class AddReviewTest extends FunctionalTestCase
         $this->login(self::TEST_USER_EMAIL);
 
         // Accède à la page du jeu vidéo
-        $crawler = $this->get(self::VIDEO_GAME_URL);
+        $this->get(self::VIDEO_GAME_URL);
 
         // Vérifie que la page est accessible
         self::assertResponseIsSuccessful();
@@ -117,7 +115,7 @@ final class AddReviewTest extends FunctionalTestCase
         $this->client->request('GET', self::VIDEO_GAME_URL);
 
         // Vérifie que la page répond correctement (200 OK)
-        self::assertResponseIsSuccessful(); 
+        self::assertResponseIsSuccessful();
 
         // 2. Vérifie que le formulaire d'avis n'est pas accessible/affiché dans le HTML
         self::assertSelectorNotExists(
@@ -125,7 +123,7 @@ final class AddReviewTest extends FunctionalTestCase
             'Le formulaire d\'avis ne devrait pas être visible pour un utilisateur non connecté.'
         );
 
-        // 3. Tente de contourner l'interface en envoyant directement une requête POST 
+        // 3. Tente de contourner l'interface en envoyant directement une requête POST
         // sur l'URL du jeu vidéo avec les données du formulaire
         $this->client->request('POST', '/jeu-video-1', [
             'review' => [
@@ -144,13 +142,13 @@ final class AddReviewTest extends FunctionalTestCase
         // Désactive la capture automatique des exceptions par le client Symfony
         // pour permettre à PHPUnit de l'attraper
         $this->client->catchExceptions(false);
-        
+
         // Déclare à PHPUnit qu'on s'attend à une exception de type DriverException ou PDOException
         // (Selon la configuration Doctrine, les erreurs SQL lèvent généralement une PDOException ou une DriverException de Doctrine)
         $this->expectException(\Doctrine\DBAL\Exception\NotNullConstraintViolationException::class);
-        
+
         // On peut aussi affiner le message attendu :
-        //$this->expectExceptionMessage("SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'rating' cannot be null");
+        // $this->expectExceptionMessage("SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'rating' cannot be null");
 
         // Connecte un utilisateur qui n'a pas encore posté d'avis
         $this->login(self::TEST_USER_EMAIL);
@@ -172,17 +170,16 @@ final class AddReviewTest extends FunctionalTestCase
                 '_token' => $this->client->getCrawler()->filter('form[name="review"] input[name="review[_token]"]')->attr('value'),
             ],
         ]);
-
     }
 
-        // test d'ajout d'un avis sans authentification
+    // test d'ajout d'un avis sans authentification
     public function testAccessFormWithoutAuth(): void
     {
         // 1. Accède à la page du jeu vidéo en tant qu'invité (non connecté)
         $this->client->request('GET', self::VIDEO_GAME_URL);
 
         // Vérifie que la page répond correctement (200 OK)
-        self::assertResponseIsSuccessful(); 
+        self::assertResponseIsSuccessful();
 
         // 2. Vérifie que le formulaire d'avis n'est pas accessible/affiché dans le HTML
         self::assertSelectorNotExists(
@@ -199,7 +196,7 @@ final class AddReviewTest extends FunctionalTestCase
             'comment' => self::TEST_COMMENT,
         ]);
 
-        if ($review !== null) {
+        if (null !== $review) {
             $entityManager->remove($review);
             $entityManager->flush();
         }

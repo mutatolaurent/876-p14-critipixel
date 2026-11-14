@@ -14,7 +14,8 @@ final class Progress
 
     public function getPercent(): int
     {
-        $nbOfReviews = count($this->videoGame->getReviews());
-        return $nbOfReviews === 0 ? 0 : (int) round(($this->number / $nbOfReviews) * 100);
+        $nbOfReviews = \count($this->videoGame->getReviews());
+
+        return 0 === $nbOfReviews ? 0 : (int) round(($this->number / $nbOfReviews) * 100);
     }
 }

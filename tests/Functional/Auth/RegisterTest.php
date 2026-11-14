@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Tests\Functional\Auth;
 
 use App\Model\Entity\User;
@@ -33,6 +31,8 @@ final class RegisterTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideInvalidFormData
+     *
+     * @param array<string, string> $formData
      */
     public function testThatRegistrationShouldFailed(array $formData): void
     {
@@ -43,6 +43,11 @@ final class RegisterTest extends FunctionalTestCase
         self::assertResponseIsUnprocessable();
     }
 
+    /**
+     * Fournit des données de formulaire invalides pour les tests de validation.
+     *
+     * @return iterable<string, array{0: array<string, string>}>
+     */
     public static function provideInvalidFormData(): iterable
     {
         yield 'empty username' => [self::getFormData(['register[username]' => ''])];
@@ -53,12 +58,19 @@ final class RegisterTest extends FunctionalTestCase
         yield 'invalid email' => [self::getFormData(['register[email]' => 'fail'])];
     }
 
+    /**
+     * Fournit les données de formulaire par défaut pour l'inscription, avec possibilité de les surcharger.
+     *
+     * @param array<string, string> $overrideData
+     *
+     * @return array<string, string>
+     */
     public static function getFormData(array $overrideData = []): array
     {
         return [
             'register[username]' => 'username',
             'register[email]' => 'user@email.com',
-            'register[plainPassword]' => 'SuperPassword123!'
+            'register[plainPassword]' => 'SuperPassword123!',
         ] + $overrideData;
     }
 
@@ -70,7 +82,7 @@ final class RegisterTest extends FunctionalTestCase
             'email' => 'user@email.com',
         ]);
 
-        if ($user !== null) {
+        if (null !== $user) {
             $entityManager->remove($user);
             $entityManager->flush();
         }

@@ -6,18 +6,13 @@ namespace App\Doctrine\DataFixtures;
 use App\Model\Entity\VideoGame;
 // use App\Rating\CalculateAverageRating;
 // use App\Rating\CountRatingsPerValue;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
 
-use function array_fill_callback;
-
 /**
- * Class VideoGameFixtures
- *
- * @package App\Doctrine\DataFixtures
+ * Class VideoGameFixtures.
  */
 final class VideoGameFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -30,26 +25,23 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 
     /**
      * Charge les fixtures pour les jeux vidéo.
-     *
-     * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
         // $users = $manager->getRepository(User::class)->findAll();
 
         // Crée 50 jeux vidéo avec des données aléatoires
-        $videoGames = array_fill_callback(
-            0,
-            50,
+        $videoGames = array_map(
             fn (int $index): VideoGame => (new VideoGame())
-            ->setTitle(sprintf('Jeu vidéo %d', $index))
-            ->setSlug(sprintf('jeu-video-%d', $index))
+            ->setTitle(\sprintf('Jeu vidéo %d', $index))
+            ->setSlug(\sprintf('jeu-video-%d', $index))
             ->setDescription($this->faker->paragraphs(10, true))
-            ->setReleaseDate(new DateTimeImmutable())
+            ->setReleaseDate(new \DateTimeImmutable())
             ->setTest($this->faker->paragraphs(6, true))
             ->setRating(($index % 5) + 1)
-            ->setImageName(sprintf('video_game_%d.png', $index))
-            ->setImageSize(2_098_872)
+            ->setImageName(\sprintf('video_game_%d.png', $index))
+            ->setImageSize(2_098_872),
+            range(0, 49)
         );
 
         // TODO : Ajouter les tags aux jeux vidéo
@@ -63,7 +55,6 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 
         // TODO : Ajouter des reviews aux jeux vidéo
         // Les Reviews sont créées dans ReviewFixtures.
-
     }
 
     public function getDependencies(): array

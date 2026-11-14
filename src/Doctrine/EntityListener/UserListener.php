@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Doctrine\EntityListener;
 
 use App\Model\Entity\User;

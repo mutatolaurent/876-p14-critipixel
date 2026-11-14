@@ -1,0 +1,91 @@
+name: Symfony CI
+
+on:
+  push:
+    branches: ["main", "master", "dev"]
+  pull_request:
+    branches: ["main", "master", "dev"]
+
+jobs:
+  php-tests:
+    runs-on: ubuntu-latest
+
+    # Déclaration d'un service MySQL distant pour les tests
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: db_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    strategy:
+      matrix:
+        php-version: ["8.2"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, pdo_mysql
+          coverage: none
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+
+      # Configuration de l'environnement de test pour pointer vers le service MySQL
+      - name: Prepare Test Database
+        env:
+          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/criti-pixel_test?serverVersion=8.0&charset=utf8mb4"
+          APP_ENV: test
+          APP_LOCALE: fr
+        run: |
+          php bin/console cache:clear --env=test
+          php bin/console sass:build --env=test
+          php bin/console doctrine:database:create --env=test
+          php bin/console doctrine:migrations:migrate --no-interaction --env=test
+          php bin/console doctrine:fixtures:load --no-interaction --env=test
+
+      # Contrôle de la qualité du code (PHP CS Fixer)
+      - name: Check PHP Code Style (PHP CS Fixer)
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff --allow-risky=yes
+
+      # Ajout du contrôle qualité PHPStan
+      - name: Run PHPStan Analysis
+        env:
+          APP_ENV: test
+        run: vendor/bin/phpstan analyse --no-progress
+
+      - name: Run Unit and Functional Tests
+        env:
+          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/criti-pixel_test?serverVersion=8.0&charset=utf8mb4"
+        run: vendor/bin/phpunit tests/Unit tests/Functional/Auth
+
+  deploy:
+    needs: php-tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to OVH via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.OVH_HOST }}
+          username: ${{ secrets.OVH_USERNAME }}
+          password: ${{ secrets.OVH_PASSWORD }}
+          port: 22
+          script: |
+            set -e
+            cd www/ocr-projet14
+            git pull origin main
+            /usr/local/php8.2/bin/php ~/bin/composer.phar install --no-dev --optimize-autoloader --no-interaction
+            php bin/console doctrine:migrations:migrate --env=prod --no-interaction
+            php bin/console sass:build --env=prod
+            php bin/console asset-map:compile --env=prod
+            php bin/console cache:clear --env=prod --no-debug
