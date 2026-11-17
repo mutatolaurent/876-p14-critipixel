@@ -39,6 +39,6 @@ final class AuthController extends AbstractController
             return $this->redirectToRoute('auth_login');
         }
 
-        retur $this->render('views/auth/register.html.twig', ['form' => $form]);
+        return $this->render('views/auth/register.html.twig', ['form' => $form]);
     }
 }
