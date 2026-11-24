@@ -2,9 +2,9 @@ name: Symfony CI
 
 on:
   push:
-    branches: ["main", "master", "dev"]
+    branches: ["main"]
   pull_request:
-    branches: ["main", "master", "dev"]
+    branches: ["main"]
 
 jobs:
   php-tests:
